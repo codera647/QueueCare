@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import {
   Activity,
   ArrowRight,
@@ -37,7 +37,7 @@ function UnderlineStroke() {
 
 function FeatureItem({ icon: Icon, label }) {
   return (
-    <div className="inline-flex h-[40px] items-center gap-2 rounded-full border border-[rgba(22,163,74,0.14)] bg-white/70 px-[14px] py-2 whitespace-nowrap shadow-[0_10px_24px_rgba(16,32,24,0.06)]">
+    <div className="inline-flex h-[40px] items-center gap-2 rounded-full border border-[rgba(22,163,74,0.14)] bg-white/70 px-3 py-2 whitespace-nowrap shadow-[0_10px_24px_rgba(16,32,24,0.06)] sm:px-[14px]">
       <span className="grid h-[28px] w-[28px] place-items-center rounded-full bg-[#EAF9EF] text-[#16A34A]">
         <Icon size={14} />
       </span>
@@ -55,7 +55,11 @@ function CardShell({
   floatDuration = 6,
   floatDelay = 0,
   tilt = {},
+  disableFloat = false,
 }) {
+  const reduceMotion = useReducedMotion();
+  const shouldFloat = !(disableFloat || reduceMotion);
+
   return (
     <motion.div
       className={[
@@ -63,24 +67,36 @@ function CardShell({
         className,
       ].join(" ")}
       initial={initial}
-      animate={{
-        ...animate,
-        y: [0, -8, 0],
-      }}
-      transition={{
-        ...transition,
-        y: {
-          duration: floatDuration,
-          repeat: Infinity,
-          ease: "easeInOut",
-          delay: floatDelay,
-        },
-      }}
-      whileHover={{
-        y: -8,
-        scale: 1.02,
-        ...tilt,
-      }}
+      animate={
+        shouldFloat
+          ? {
+              ...animate,
+              y: [0, -8, 0],
+            }
+          : animate
+      }
+      transition={
+        shouldFloat
+          ? {
+              ...transition,
+              y: {
+                duration: floatDuration,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: floatDelay,
+              },
+            }
+          : transition
+      }
+      whileHover={
+        shouldFloat
+          ? {
+              y: -8,
+              scale: 1.02,
+              ...tilt,
+            }
+          : undefined
+      }
       style={{
         transformStyle: "preserve-3d",
         backfaceVisibility: "hidden",
@@ -105,7 +121,7 @@ function DashboardMockup({ mobile = false }) {
     <CardShell
       className={
         mobile
-          ? "h-auto w-full rounded-[30px] bg-[rgba(255,255,255,0.94)] p-5"
+          ? "mx-auto h-auto w-full max-w-[360px] rounded-[30px] bg-[rgba(255,255,255,0.94)] p-4 sm:max-w-[420px] sm:p-5"
           : "h-[325px] w-[500px] rounded-[30px] bg-[rgba(255,255,255,0.94)] p-4"
       }
       initial={{ opacity: 0, x: 28, rotateY: -14, rotateX: 6, rotateZ: -2 }}
@@ -113,6 +129,7 @@ function DashboardMockup({ mobile = false }) {
       transition={{ duration: 0.75, ease: easeOut, delay: 0.1 }}
       floatDuration={6.4}
       tilt={{ rotateY: -5, rotateX: 2, rotateZ: -1 }}
+      disableFloat={mobile}
     >
       {!mobile ? (
         <div className="pointer-events-none absolute bottom-[-18px] left-[10%] right-[10%] -z-10 h-[30px] rounded-[999px] bg-[rgba(15,122,58,0.22)] blur-[18px]" />
@@ -249,6 +266,7 @@ function TokenMockup({ mobile = false }) {
       floatDuration={5.6}
       floatDelay={0.4}
       tilt={{ rotateY: -10, rotateX: 3, rotateZ: 1 }}
+      disableFloat={mobile}
     >
       {!mobile ? (
         <div className="pointer-events-none absolute bottom-[-18px] left-[12%] right-[12%] -z-10 h-[28px] rounded-[999px] bg-[rgba(15,122,58,0.2)] blur-[18px]" />
@@ -306,6 +324,7 @@ function WaitTimeCard({ mobile = false }) {
       floatDuration={6.4}
       floatDelay={0.7}
       tilt={{ rotateY: -4, rotateX: 2, rotateZ: 1 }}
+      disableFloat={mobile}
     >
       <div className="relative flex h-full items-start gap-4">
         <div className="grid h-11 w-11 shrink-0 place-items-center rounded-[18px] bg-[#EAF9EF] text-[#16A34A]">
@@ -350,6 +369,7 @@ function NotificationMockup({ mobile = false }) {
       floatDuration={5.8}
       floatDelay={1}
       tilt={{ rotateY: -6, rotateX: 2, rotateZ: -1 }}
+      disableFloat={mobile}
     >
       <div className="relative flex h-full flex-col">
         <div className="flex items-center justify-between">
@@ -415,7 +435,7 @@ function FloatingProductCards() {
         </div>
       </div>
 
-      <div className="space-y-5 lg:hidden">
+      <div className="mx-auto max-w-[360px] space-y-4 sm:max-w-[420px] lg:hidden">
         <DashboardMockup mobile />
         <TokenMockup mobile />
         <NotificationMockup mobile />
@@ -430,29 +450,31 @@ function LeftHeroContent() {
       initial={{ opacity: 0, x: -18 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.7, ease: easeOut }}
-      className="pt-0"
+      className="mx-auto max-w-[610px] pt-0 text-center lg:mx-0 lg:max-w-none lg:text-left"
     >
       <div className="inline-flex items-center gap-3 rounded-full border border-[rgba(22,163,74,0.2)] bg-[#EAF9EF] px-[18px] py-[10px] text-[15px] font-semibold text-[#0F7A3A] shadow-[0_16px_40px_rgba(16,32,24,0.08)]">
         <span className="h-2.5 w-2.5 rounded-full bg-[#16A34A]" />
         Smart Queue Management
       </div>
 
-      <h1 className="mt-6 max-w-[560px] text-[44px] font-extrabold leading-[1.02] tracking-tight text-[#102018] md:text-[52px] lg:text-[54px] xl:text-[60px] 2xl:text-[66px]">
+      <h1 className="mt-6 max-w-[560px] text-[42px] font-extrabold leading-[1.02] tracking-tight text-[#102018] sm:text-[48px] md:text-[56px] lg:text-[54px] xl:text-[60px] 2xl:text-[66px] lg:max-w-[560px]">
         No More Waiting.
         <br />
         <span className="text-[#16A34A]">Just Flow.</span>
       </h1>
-      <UnderlineStroke />
+      <div className="flex justify-center lg:block">
+        <UnderlineStroke />
+      </div>
 
-      <p className="mt-5 max-w-[610px] text-[17px] leading-[1.6] text-[#53645A]">
+      <p className="mt-5 max-w-[610px] text-[16px] leading-[1.6] text-[#53645A] md:text-[17px]">
         QueueCare helps clinics manage digital tokens, live queues, wait
         times, and patient turn notifications from one simple dashboard.
       </p>
 
-      <div className="mt-6 flex flex-wrap items-center gap-4">
+      <div className="mt-6 flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-center lg:justify-start">
         <motion.a
           href="#features"
-          className="inline-flex items-center justify-center gap-3 rounded-2xl bg-[#16A34A] px-7 py-4 text-sm font-semibold text-white shadow-[0_22px_46px_rgba(22,163,74,0.22)]"
+          className="inline-flex min-h-[48px] w-full items-center justify-center gap-3 rounded-2xl bg-[#16A34A] px-7 py-4 text-sm font-semibold text-white shadow-[0_22px_46px_rgba(22,163,74,0.22)] sm:w-auto"
           whileHover={{ y: -2 }}
           whileTap={{ scale: 0.98 }}
           transition={{ duration: 0.2 }}
@@ -461,7 +483,7 @@ function LeftHeroContent() {
         </motion.a>
         <motion.a
           href="#product"
-          className="inline-flex items-center justify-center gap-3 rounded-2xl border border-[rgba(22,163,74,0.22)] bg-white/70 px-7 py-4 text-sm font-semibold text-[#16A34A] shadow-[0_16px_34px_rgba(16,32,24,0.08)]"
+          className="inline-flex min-h-[48px] w-full items-center justify-center gap-3 rounded-2xl border border-[rgba(22,163,74,0.22)] bg-white/70 px-7 py-4 text-sm font-semibold text-[#16A34A] shadow-[0_16px_34px_rgba(16,32,24,0.08)] sm:w-auto"
           whileHover={{ y: -2, backgroundColor: "rgba(234,249,239,0.75)" }}
           whileTap={{ scale: 0.98 }}
           transition={{ duration: 0.2 }}
@@ -473,12 +495,12 @@ function LeftHeroContent() {
         </motion.a>
       </div>
 
-      <div className="mt-5 inline-flex items-center gap-3 text-[15px] text-[#53645A]">
+      <div className="mt-5 inline-flex items-center justify-center gap-3 text-[15px] text-[#53645A] lg:justify-start">
         <ShieldCheck size={18} className="text-[#16A34A]" />
         Built for clinics that want faster queues and calmer waiting rooms.
       </div>
 
-      <div className="mt-5 flex flex-wrap gap-[10px] xl:flex-nowrap">
+      <div className="mt-5 flex flex-wrap justify-center gap-2 lg:justify-start xl:flex-nowrap">
         <FeatureItem icon={Ticket} label="Digital Tokens" />
         <FeatureItem icon={TrendingUp} label="Queue Tracking" />
         <FeatureItem icon={Bell} label="Turn Alerts" />
@@ -491,14 +513,14 @@ export default function HeroSection() {
   return (
     <section
       id="hero"
-      className="relative min-h-[100svh] overflow-hidden bg-[#FAF7F0] text-[#102018]"
+      className="relative overflow-hidden bg-[#FAF7F0] text-[#102018] lg:min-h-[100svh]"
     >
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute inset-0 bg-[#FAF7F0]" />
         <div className="absolute inset-0 bg-[radial-gradient(900px_circle_at_25%_18%,rgba(22,163,74,0.10),transparent_60%),radial-gradient(880px_circle_at_72%_40%,rgba(22,163,74,0.10),transparent_64%),radial-gradient(800px_circle_at_48%_92%,rgba(16,32,24,0.08),transparent_60%)]" />
       </div>
 
-      <div className="mx-auto grid min-h-[100svh] max-w-[1500px] grid-cols-1 items-center gap-4 px-8 py-6 lg:grid-cols-[0.82fr_1.18fr] lg:px-10 xl:gap-6">
+      <div className="mx-auto grid max-w-[1500px] grid-cols-1 items-center gap-10 px-4 py-16 sm:px-6 md:py-20 lg:min-h-[100svh] lg:grid-cols-[0.82fr_1.18fr] lg:gap-4 lg:px-10 lg:py-6 xl:gap-6 xl:px-12">
         <LeftHeroContent />
 
         <motion.div

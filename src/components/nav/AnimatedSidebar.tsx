@@ -2,12 +2,11 @@
 
 import type { LucideIcon } from "lucide-react";
 import {
+  Download,
   Home,
-  Sparkles,
-  Info,
-  Monitor,
   MessageCircle,
-  Users,
+  Sparkles,
+  Monitor,
   Mail,
 } from "lucide-react";
 import * as React from "react";
@@ -24,10 +23,7 @@ type NavItem = {
 const navItems: NavItem[] = [
   { id: "hero", label: "Hero", icon: Home },
   { id: "features", label: "Features", icon: Sparkles },
-  { id: "about", label: "About", icon: Info },
   { id: "product", label: "Product", icon: Monitor },
-  { id: "reviews", label: "Reviews", icon: MessageCircle },
-  { id: "team", label: "Team", icon: Users },
   { id: "contact", label: "Contact", icon: Mail },
 ];
 
@@ -46,11 +42,11 @@ function prefersReducedMotion() {
 
 export function AnimatedSidebar() {
   const [reduceMotion, setReduceMotion] = React.useState(false);
-  const [disabled, setDisabled] = React.useState(true);
+  const [disableHill, setDisableHill] = React.useState(true);
 
   React.useEffect(() => {
     setReduceMotion(prefersReducedMotion());
-    setDisabled(isCoarsePointer());
+    setDisableHill(isCoarsePointer());
   }, []);
 
   const sidebarRef = React.useRef<HTMLElement | null>(null);
@@ -75,8 +71,6 @@ export function AnimatedSidebar() {
   }, [recalcHill]);
 
   React.useEffect(() => {
-    if (disabled) return;
-
     const sectionEls = navItems
       .map((item) => {
         const el = document.getElementById(item.id);
@@ -141,7 +135,7 @@ export function AnimatedSidebar() {
       window.removeEventListener("scroll", onScrollOrResize);
       window.removeEventListener("resize", onScrollOrResize);
     };
-  }, [activeIndex, disabled, recalcHill]);
+  }, [activeIndex, recalcHill]);
 
   const onNavClick = (id: string, index: number) => {
     setActiveIndex(index);
@@ -150,61 +144,114 @@ export function AnimatedSidebar() {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
+  const onContactClick = () => {
+    document.getElementById("contact")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   return (
-    <aside
-      className={styles.sidebar}
-      aria-label="QueueCare navigation"
-      ref={sidebarRef}
-    >
-      {/* z-index: 1 (behind the sidebar surface) */}
-      <motion.div
-        className={styles.hill}
-        aria-hidden="true"
-        animate={{ y: hillY }}
-        transition={
-          reduceMotion || disabled
-            ? { duration: 0 }
-            : { type: "spring", stiffness: 230, damping: 28 }
-        }
-      />
+    <>
+      <aside
+        className={styles.sidebar}
+        aria-label="QueueCare navigation"
+        ref={sidebarRef}
+      >
+        <motion.div
+          className={styles.hill}
+          aria-hidden="true"
+          animate={{ y: hillY }}
+          transition={
+            reduceMotion || disableHill
+              ? { duration: 0 }
+              : { type: "spring", stiffness: 230, damping: 28 }
+          }
+        />
 
-      {/* z-index: 2 */}
-      <motion.div
-        className={styles.bg}
-        aria-hidden="true"
-      />
+        <motion.div
+          className={styles.bg}
+          aria-hidden="true"
+        />
 
-      {/* z-index: 3 */}
-      <div className={styles.content}>
-        <div className={styles.logoBox}>
-          <LogoMark2D size={30} />
+        <div className={styles.content}>
+          <div className={styles.logoBox}>
+            <LogoMark2D size={30} />
+          </div>
+
+          <nav className={styles.nav} aria-label="Sections">
+            {navItems.map((item, index) => {
+              const Icon = item.icon;
+              const isActive = index === activeIndex;
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => onNavClick(item.id, index)}
+                  ref={(node) => {
+                    itemRefs.current[index] = node;
+                  }}
+                  className={[
+                    styles.navButton,
+                    isActive ? styles.navButtonActive : "",
+                  ].join(" ")}
+                  aria-label={item.label}
+                  aria-current={isActive ? "true" : undefined}
+                >
+                  <Icon size={20} />
+                </button>
+              );
+            })}
+          </nav>
+
+          <div className={styles.ctaWrap} aria-label="Quick actions">
+            <a
+              href="#"
+              onClick={(event) => event.preventDefault()}
+              className={styles.ctaButton}
+              aria-label="Download"
+            >
+              <Download size={18} />
+              <span className={styles.ctaTooltip}>Download</span>
+            </a>
+
+            <button
+              type="button"
+              onClick={onContactClick}
+              className={[styles.ctaButton, styles.ctaButtonStrong].join(" ")}
+              aria-label="Contact"
+            >
+              <MessageCircle size={18} />
+              <span className={styles.ctaTooltip}>Contact</span>
+            </button>
+          </div>
         </div>
+      </aside>
 
-        <nav className={styles.nav} aria-label="Sections">
-          {navItems.map((item, index) => {
-            const Icon = item.icon;
-            const isActive = index === activeIndex;
-            return (
-              <button
-                key={item.id}
-                type="button"
-                onClick={() => onNavClick(item.id, index)}
-                ref={(node) => {
-                  itemRefs.current[index] = node;
-                }}
-                className={[
-                  styles.navButton,
-                  isActive ? styles.navButtonActive : "",
-                ].join(" ")}
-                aria-label={item.label}
-                aria-current={isActive ? "true" : undefined}
-              >
-                <Icon size={20} />
-              </button>
-            );
-          })}
-        </nav>
-      </div>
-    </aside>
+      <nav
+        className="fixed inset-x-4 bottom-4 z-50 flex items-center gap-2 rounded-[24px] border border-[rgba(22,163,74,0.14)] bg-white/92 p-2 shadow-[0_20px_50px_rgba(16,32,24,0.12)] backdrop-blur-md lg:hidden"
+        aria-label="Mobile sections"
+      >
+        {navItems.map((item, index) => {
+          const Icon = item.icon;
+          const isActive = index === activeIndex;
+          return (
+            <button
+              key={item.id}
+              type="button"
+              onClick={() => onNavClick(item.id, index)}
+              className={[
+                "flex min-h-[56px] flex-1 flex-col items-center justify-center gap-1 rounded-[18px] px-2 py-2 text-[11px] font-semibold transition-colors",
+                isActive
+                  ? "bg-[#EAF9EF] text-[#0F7A3A]"
+                  : "text-[#5B6B63]",
+              ].join(" ")}
+              aria-label={item.label}
+              aria-current={isActive ? "true" : undefined}
+            >
+              <Icon size={18} />
+              <span>{item.label}</span>
+            </button>
+          );
+        })}
+      </nav>
+    </>
   );
 }

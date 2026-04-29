@@ -65,10 +65,14 @@
     "Liberation Mono", "Courier New", monospace;
 }
 
-body {
-  font-family: var(--font-sans);
-}
-
 html {
   scroll-behavior: smooth;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  width: 100%;
+  overflow-x: hidden;
+  font-family: var(--font-sans);
 }

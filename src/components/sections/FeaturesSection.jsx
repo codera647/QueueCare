@@ -99,12 +99,12 @@ function AppointmentChip() {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.6 }}
       transition={{ duration: 0.5, ease: easeOut }}
-      className="mt-5 inline-flex items-center gap-3 rounded-full border border-[rgba(22,163,74,0.14)] bg-white px-4 py-3 text-sm font-medium text-[#102018] shadow-[0_18px_40px_rgba(16,32,24,0.06)]"
+      className="mt-5 inline-flex flex-wrap items-center justify-center gap-3 rounded-full border border-[rgba(22,163,74,0.14)] bg-white px-4 py-3 text-sm font-medium text-[#102018] shadow-[0_18px_40px_rgba(16,32,24,0.06)]"
     >
       <span className="grid h-9 w-9 place-items-center rounded-full bg-[#EAF9EF] text-[#16A34A]">
         <CalendarDays size={18} />
       </span>
-      <span>Mon, 12 May — Appointment booked</span>
+      <span className="text-left sm:text-center">Mon, 12 May - Appointment booked</span>
     </motion.div>
   );
 }
@@ -322,10 +322,10 @@ function FeatureStoryCard({
           </div>
           <div className="mt-5">
             <FeatureTag label={tag} />
-            <h3 className="mt-4 text-[28px] font-bold tracking-tight text-[#102018]">
+            <h3 className="mt-4 text-[24px] font-bold tracking-tight text-[#102018] sm:text-[26px] lg:text-[28px]">
               {title}
             </h3>
-            <p className="mt-3 max-w-[520px] text-[17px] leading-relaxed text-[#5B6B63]">
+            <p className="mt-3 max-w-[520px] text-[16px] leading-relaxed text-[#5B6B63] md:text-[17px]">
               {description}
             </p>
             <BulletList items={bullets} />
@@ -353,7 +353,7 @@ function FeaturesCTABar() {
             <Users size={24} />
           </div>
           <div>
-            <p className="text-[28px] font-bold leading-tight tracking-tight text-[#102018]">
+            <p className="text-[24px] font-bold leading-tight tracking-tight text-[#102018] sm:text-[26px] lg:text-[28px]">
               Everything your front desk needs
               <br />
               to keep queues calm.
@@ -365,7 +365,7 @@ function FeaturesCTABar() {
           href="#product"
           whileHover={{ y: -2 }}
           whileTap={{ scale: 0.98 }}
-          className="inline-flex items-center justify-center gap-3 rounded-2xl bg-[#16A34A] px-6 py-4 text-sm font-semibold text-white shadow-[0_18px_40px_rgba(22,163,74,0.22)]"
+          className="inline-flex min-h-[48px] w-full items-center justify-center gap-3 rounded-2xl bg-[#16A34A] px-6 py-4 text-sm font-semibold text-white shadow-[0_18px_40px_rgba(22,163,74,0.22)] md:w-auto"
         >
           See All Features
           <ArrowRight size={17} />
@@ -381,10 +381,10 @@ export default function FeaturesSection() {
       id="features"
       className="relative overflow-visible bg-[#FAF7F0] text-[#102018]"
     >
-      <div className="mx-auto max-w-[1240px] px-6 pb-20 pt-20 md:px-8 md:pb-24 md:pt-24 lg:px-10">
+      <div className="mx-auto max-w-[1240px] px-4 pb-20 pt-20 sm:px-6 md:px-8 md:pb-24 md:pt-24 lg:px-10">
         <div className="mx-auto max-w-[920px] text-center">
           <SectionBadge label="Core Features" />
-          <h2 className="mt-6 text-[36px] font-extrabold leading-[1.08] tracking-tight text-[#102018] md:text-[48px] lg:text-[56px]">
+          <h2 className="mt-6 text-[34px] font-extrabold leading-[1.08] tracking-tight text-[#102018] sm:text-[38px] md:text-[44px] lg:text-[54px]">
             From booking to visit,
             <br />
             every step <span className="text-[#16A34A]">keeps patients flowing.</span>
@@ -392,9 +392,9 @@ export default function FeaturesSection() {
           <div className="flex justify-center">
             <AccentUnderline />
           </div>
-          <p className="mx-auto mt-5 max-w-[760px] text-[17px] leading-[1.75] text-[#5B6B63] md:text-[18px]">
+          <p className="mx-auto mt-5 max-w-[760px] text-[16px] leading-[1.75] text-[#5B6B63] md:text-[18px]">
             QueueCare connects every step of your clinic&apos;s patient
-            journey—so you can reduce wait times, improve experience, and run a
+            journey-so you can reduce wait times, improve experience, and run a
             smoother front desk.
           </p>
         </div>
@@ -422,7 +422,7 @@ export default function FeaturesSection() {
           <FeatureStoryCard
             icon={Activity}
             title="Live Queue Tracking"
-            description="Know what’s happening in real time."
+            description="Know what's happening in real time."
             tag="Real-time"
             bullets={[
               "Live queue status on dashboard & screens",
@@ -452,3 +452,4 @@ export default function FeaturesSection() {
     </section>
   );
 }
+
