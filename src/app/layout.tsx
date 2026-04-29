@@ -3,9 +3,14 @@ import "./globals.css";
 import { Providers } from "./providers";
 
 export const metadata: Metadata = {
-  title: "QueueCare — Less Wait. More Life.",
+  title: "QueueCare — Less Wait. More Flow.",
   description:
-    "QueueCare helps clinics and service businesses reduce waiting time with digital tokens, live queue tracking, and smart turn notifications.",
+    "Smart queue management for clinics with digital tokens, live wait times, and turn notifications.",
+  icons: {
+    icon: "/favicon.svg",
+    shortcut: "/favicon.svg",
+    apple: "/apple-touch-icon.svg",
+  },
 };
 
 export default function RootLayout({
