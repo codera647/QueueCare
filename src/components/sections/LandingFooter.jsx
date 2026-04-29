@@ -64,18 +64,18 @@ export default function LandingFooter() {
           <div className="grid gap-8 sm:grid-cols-2 lg:gap-10">
             <div>
               <p className="text-sm font-bold text-[#102018]">Quick Links</p>
-              <div className="mt-4 space-y-3">
+              <nav className="mt-4 flex flex-col items-start gap-3">
                 {quickLinks.map((link) => (
                   <a
                     key={link.href}
                     href={link.href}
                     className="inline-flex items-center gap-2 text-sm text-[#5B6B63] transition-colors hover:text-[#16A34A]"
                   >
-                    {link.label}
+                    <span>{link.label}</span>
                     <ArrowUpRight size={14} />
                   </a>
                 ))}
-              </div>
+              </nav>
             </div>
 
             <div className="space-y-3">
