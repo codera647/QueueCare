@@ -76,6 +76,16 @@ const auth = () => getFirebaseAuth();
 const db = () => getFirebaseDb();
 const phoneNumberPattern = /^\+?[0-9]{10,15}$/;
 
+function isRoleAllowedForAudience(
+  role: UserRole,
+  audience: "patient" | "clinic",
+): boolean {
+  if (audience === "patient") {
+    return role === "patient";
+  }
+  return role !== "patient";
+}
+
 function asDate(value: unknown, fallback?: Date): Date {
   if (value instanceof Timestamp) return value.toDate();
   if (value instanceof Date) return value;
@@ -274,12 +284,30 @@ export async function registerWithEmail(params: {
   return credential;
 }
 
-export async function loginWithEmail(email: string, password: string) {
+export async function loginWithEmail(
+  email: string,
+  password: string,
+  audience: "patient" | "clinic",
+) {
   await ensurePersistence();
-  return signInWithEmailAndPassword(auth(), email, password);
+  const credential = await signInWithEmailAndPassword(auth(), email, password);
+  const profile = await fetchUserProfile(credential.user.uid);
+  if (!profile) {
+    await signOut(auth());
+    throw new Error("We could not find a QueueCare profile for this account.");
+  }
+  if (!isRoleAllowedForAudience(profile.role, audience)) {
+    await signOut(auth());
+    throw new Error(
+      audience === "patient"
+        ? "This account is not registered as a patient. Please use the clinic login instead."
+        : "This account is not registered as clinic staff. Please use the patient login instead.",
+    );
+  }
+  return credential;
 }
 
-export async function loginWithGoogle(role: UserRole) {
+export async function loginWithGoogle(role: UserRole, audience: "patient" | "clinic") {
   await ensurePersistence();
   const credential = await signInWithPopup(auth(), getGoogleProvider());
   const user = credential.user;
@@ -293,8 +321,13 @@ export async function loginWithGoogle(role: UserRole) {
         role,
         clinicName: role === "patient" ? undefined : "QueueCare Clinic",
       });
-    } else if (existing.role !== role && existing.role === "patient" && role !== "patient") {
-      // keep existing profile authoritative
+    } else if (!isRoleAllowedForAudience(existing.role, audience)) {
+      await signOut(auth());
+      throw new Error(
+        audience === "patient"
+          ? "This Google account is linked to clinic staff. Please use the clinic login instead."
+          : "This Google account is linked to a patient profile. Please use the patient login instead.",
+      );
     }
   }
   return credential;

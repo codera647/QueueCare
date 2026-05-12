@@ -62,7 +62,7 @@ export function AuthScreen({
         });
         router.replace("/app/auth/verify-email");
       } else {
-        const credential = await loginWithEmail(form.email.trim(), form.password);
+        const credential = await loginWithEmail(form.email.trim(), form.password, audience);
         const nextPath = role === "patient" ? "/app/patient" : "/app/clinic";
         if (
           credential.user.providerData.some((item) => item.providerId === "password") &&
@@ -84,7 +84,7 @@ export function AuthScreen({
     setLoading(true);
     setError(null);
     try {
-      await loginWithGoogle(role);
+      await loginWithGoogle(role, audience);
       router.replace(role === "patient" ? "/app/patient" : "/app/clinic");
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : "Google sign-in failed.");
