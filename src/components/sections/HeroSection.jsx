@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
 import {
   Activity,
@@ -472,27 +473,29 @@ function LeftHeroContent() {
       </p>
 
       <div className="mt-6 flex flex-col items-stretch gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-center lg:justify-start">
-        <motion.a
-          href="#features"
+        <motion.div
           className="inline-flex min-h-[48px] w-full items-center justify-center gap-3 rounded-2xl bg-[#16A34A] px-7 py-4 text-sm font-semibold text-white shadow-[0_22px_46px_rgba(22,163,74,0.22)] sm:w-auto"
           whileHover={{ y: -2 }}
           whileTap={{ scale: 0.98 }}
           transition={{ duration: 0.2 }}
         >
-          Explore QueueCare <ArrowRight size={18} />
-        </motion.a>
-        <motion.a
-          href="#product"
+          <Link href="/app" className="inline-flex items-center gap-3">
+            Launch QueueCare <ArrowRight size={18} />
+          </Link>
+        </motion.div>
+        <motion.div
           className="inline-flex min-h-[48px] w-full items-center justify-center gap-3 rounded-2xl border border-[rgba(22,163,74,0.22)] bg-white/70 px-7 py-4 text-sm font-semibold text-[#16A34A] shadow-[0_16px_34px_rgba(16,32,24,0.08)] sm:w-auto"
           whileHover={{ y: -2, backgroundColor: "rgba(234,249,239,0.75)" }}
           whileTap={{ scale: 0.98 }}
           transition={{ duration: 0.2 }}
         >
-          <span className="grid h-6 w-6 place-items-center rounded-full border border-[rgba(22,163,74,0.25)] bg-[#EAF9EF]">
-            <Play size={12} className="ml-[1px]" />
-          </span>
-          Watch Demo
-        </motion.a>
+          <Link href="/app/auth/login/clinic" className="inline-flex items-center gap-3">
+            <span className="grid h-6 w-6 place-items-center rounded-full border border-[rgba(22,163,74,0.25)] bg-[#EAF9EF]">
+              <Play size={12} className="ml-[1px]" />
+            </span>
+            Clinic Sign In
+          </Link>
+        </motion.div>
       </div>
 
       <div className="mt-5 inline-flex items-center justify-center gap-3 text-[15px] text-[#53645A] lg:justify-start">

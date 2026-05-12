@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 import {
   Download,
@@ -144,10 +145,6 @@ export function AnimatedSidebar() {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
-  const onContactClick = () => {
-    document.getElementById("contact")?.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
-
   return (
     <>
       <aside
@@ -202,25 +199,23 @@ export function AnimatedSidebar() {
           </nav>
 
           <div className={styles.ctaWrap} aria-label="Quick actions">
-            <a
-              href="#"
-              onClick={(event) => event.preventDefault()}
+            <Link
+              href="/app"
               className={styles.ctaButton}
-              aria-label="Download"
+              aria-label="Launch app"
             >
               <Download size={18} />
-              <span className={styles.ctaTooltip}>Download</span>
-            </a>
+              <span className={styles.ctaTooltip}>Launch App</span>
+            </Link>
 
-            <button
-              type="button"
-              onClick={onContactClick}
+            <Link
+              href="/app/auth/login/clinic"
               className={[styles.ctaButton, styles.ctaButtonStrong].join(" ")}
-              aria-label="Contact"
+              aria-label="Clinic sign in"
             >
               <MessageCircle size={18} />
-              <span className={styles.ctaTooltip}>Contact</span>
-            </button>
+              <span className={styles.ctaTooltip}>Clinic Sign In</span>
+            </Link>
           </div>
         </div>
       </aside>

@@ -8,6 +8,8 @@ const quickLinks = [
   { label: "Features", href: "#features" },
   { label: "Product", href: "#product" },
   { label: "Contact", href: "#contact" },
+  { label: "Launch App", href: "/app" },
+  { label: "Clinic Sign In", href: "/app/auth/login/clinic" },
 ];
 
 const contactLinks = [

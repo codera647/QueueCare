@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactNode } from "react";
 import { useTheme } from "next-themes";
 import * as React from "react";
 
@@ -8,7 +9,7 @@ function ToggleButton({
   active,
   onClick,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
   active: boolean;
   onClick: () => void;
 }) {

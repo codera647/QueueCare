@@ -1,36 +1,103 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# QueueCare Web
 
-## Getting Started
+This Next.js app now contains:
 
-First, run the development server:
+- the marketing landing page at `/`
+- the full QueueCare product app at `/app`
+
+## Product routes
+
+- `/app`
+- `/app/auth/login/patient`
+- `/app/auth/register/patient`
+- `/app/auth/login/clinic`
+- `/app/auth/register/clinic`
+- `/app/auth/forgot-password/[audience]`
+- `/app/auth/verify-email`
+- `/app/patient`
+- `/app/patient/book`
+- `/app/clinic`
+- `/app/clinic/settings`
+
+## Firebase setup
+
+The web app uses the same Firebase project as mobile and expects the named Firestore database:
+
+- `default`
+
+Copy `.env.example` to `.env.local` and fill in your Firebase Web App values:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cp .env.example .env.local
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Required variables:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- `NEXT_PUBLIC_FIREBASE_WEB_API_KEY`
+- `NEXT_PUBLIC_FIREBASE_WEB_AUTH_DOMAIN`
+- `NEXT_PUBLIC_FIREBASE_WEB_PROJECT_ID`
+- `NEXT_PUBLIC_FIREBASE_WEB_STORAGE_BUCKET`
+- `NEXT_PUBLIC_FIREBASE_WEB_MESSAGING_SENDER_ID`
+- `NEXT_PUBLIC_FIREBASE_WEB_APP_ID`
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Optional variables:
 
-## Learn More
+- `NEXT_PUBLIC_FIREBASE_WEB_MEASUREMENT_ID`
+- `NEXT_PUBLIC_FIREBASE_WEB_VAPID_KEY`
 
-To learn more about Next.js, take a look at the following resources:
+## Web push notifications
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The web app now supports:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- foreground notification toasts while the tab is open
+- FCM browser push through `/firebase-messaging-sw.js`
+- patient notification preferences in `/app/patient/settings`
+- Firebase Cloud Functions for appointment reminders and status updates
 
-## Deploy on Vercel
+For full browser push you still need:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. a valid `NEXT_PUBLIC_FIREBASE_WEB_VAPID_KEY`
+2. browser notification permission granted by the patient
+3. the Firebase Functions workspace in `web/functions` installed and deployed
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Install and run
+
+```bash
+npm install
+npm run dev
+```
+
+Then open:
+
+- `http://localhost:3000` for the landing page
+- `http://localhost:3000/app` for the product app
+
+## Current feature coverage
+
+### Clinic
+
+- email/password and Google auth
+- session restore and email verification gate
+- doctor switching and selected-date dashboard
+- walk-ins
+- appointment state updates
+- queue start, pause, resume, close
+- clinic profile, doctors, services
+- weekly doctor availability
+- daily queue override with reason
+
+### Patient
+
+- email/password and Google auth
+- clinic browse
+- doctor/service/date/slot booking flow
+- live active booking tracker
+- upcoming bookings and history
+- cancellation rules aligned with mobile
+- patient settings and notification preferences
+- patient arrival request button for same-day visits
+
+## Notes
+
+- The landing page keeps its current design and now links into the product app.
+- Web push token registration is wired, but full outbound push delivery still needs backend trigger logic.
