@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Activity,
   BarChart3,
@@ -549,9 +549,40 @@ function MainProductShowcase({ activeProduct }) {
 
 function DemoVideoCard() {
   const demoVideoSrc = "/WhatsApp%20Video%202026-04-29%20at%2011.25.19%20PM.mp4";
+  const videoRef = useRef(null);
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    const videoElement = videoRef.current;
+    const containerElement = containerRef.current;
+    if (!videoElement || !containerElement) return undefined;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          void videoElement.play().catch(() => {
+            // Ignore autoplay interruptions; user can still press play manually.
+          });
+        } else {
+          videoElement.pause();
+        }
+      },
+      {
+        threshold: 0.6,
+      },
+    );
+
+    observer.observe(containerElement);
+
+    return () => {
+      observer.disconnect();
+      videoElement.pause();
+    };
+  }, []);
 
   return (
     <motion.div
+      ref={containerRef}
       initial={{ opacity: 0, x: 24 }}
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true, amount: 0.25 }}
@@ -560,8 +591,10 @@ function DemoVideoCard() {
       className="relative h-[220px] w-full max-w-full overflow-hidden rounded-[24px] border border-[rgba(22,163,74,0.12)] bg-[#102018] text-white shadow-[0_28px_70px_rgba(15,122,58,0.20)] sm:h-[240px] md:h-[260px] lg:h-[250px] lg:rounded-[28px] xl:h-[280px]"
     >
       <video
+        ref={videoRef}
         className="h-full w-full object-cover"
         controls
+        muted
         playsInline
         preload="metadata"
       >
