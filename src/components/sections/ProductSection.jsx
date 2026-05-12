@@ -548,6 +548,8 @@ function MainProductShowcase({ activeProduct }) {
 }
 
 function DemoVideoCard() {
+  const demoVideoSrc = "/WhatsApp%20Video%202026-04-29%20at%2011.25.19%20PM.mp4";
+
   return (
     <motion.div
       initial={{ opacity: 0, x: 24 }}
@@ -555,56 +557,26 @@ function DemoVideoCard() {
       viewport={{ once: true, amount: 0.25 }}
       transition={{ duration: 0.7, ease: easeOut }}
       whileHover={{ y: -4 }}
-      className="relative h-[220px] w-full max-w-full overflow-hidden rounded-[24px] border border-[rgba(22,163,74,0.12)] bg-[linear-gradient(135deg,#0F7A3A_0%,#16A34A_48%,#8DBD48_100%)] p-5 text-white shadow-[0_28px_70px_rgba(15,122,58,0.20)] sm:h-[240px] sm:p-6 md:h-[260px] lg:h-[250px] lg:rounded-[28px] xl:h-[280px] xl:p-7"
+      className="relative h-[220px] w-full max-w-full overflow-hidden rounded-[24px] border border-[rgba(22,163,74,0.12)] bg-[#102018] text-white shadow-[0_28px_70px_rgba(15,122,58,0.20)] sm:h-[240px] md:h-[260px] lg:h-[250px] lg:rounded-[28px] xl:h-[280px]"
     >
-      <div className="pointer-events-none absolute inset-0 opacity-25 [background:radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.18),transparent_30%),radial-gradient(circle_at_80%_80%,rgba(255,255,255,0.14),transparent_28%)]" />
-      <svg
-        aria-hidden="true"
-        viewBox="0 0 400 260"
-        className="pointer-events-none absolute inset-0 h-full w-full opacity-20"
+      <video
+        className="h-full w-full object-cover"
+        controls
+        playsInline
+        preload="metadata"
       >
-        <path
-          d="M-20 180 C 80 140, 120 220, 220 180 S 360 140, 440 180"
-          fill="none"
-          stroke="white"
-          strokeWidth="2"
-        />
-        <path
-          d="M-30 210 C 60 170, 120 240, 220 205 S 350 170, 430 205"
-          fill="none"
-          stroke="white"
-          strokeWidth="2"
-        />
-      </svg>
+        <source src={demoVideoSrc} type="video/mp4" />
+        Your browser does not support the demo video.
+      </video>
 
-      <div className="relative flex h-full flex-col">
-        <div className="inline-flex w-fit items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-semibold">
+      <div className="pointer-events-none absolute inset-x-0 top-0 flex items-start justify-between bg-[linear-gradient(180deg,rgba(16,32,24,0.72),rgba(16,32,24,0.08),transparent)] p-5 sm:p-6 xl:p-7">
+        <div className="inline-flex w-fit items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-semibold backdrop-blur-sm">
           <Play size={13} className="fill-current" />
-          Watch 90-sec Demo
+          QueueCare demo
         </div>
-
-        <div className="flex flex-1 items-center justify-center">
-          <motion.button
-            type="button"
-            animate={{ scale: [1, 1.08, 1] }}
-            transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
-            className="grid h-16 w-16 place-items-center rounded-full bg-white text-[#16A34A] shadow-[0_18px_40px_rgba(16,32,24,0.18)] sm:h-20 sm:w-20 lg:h-[86px] lg:w-[86px]"
-          >
-            <Play size={24} className="ml-1 fill-current sm:h-7 sm:w-7" />
-          </motion.button>
-        </div>
-
-        <p className="max-w-[360px] text-sm leading-relaxed text-white/90">
-          See how QueueCare streamlines your clinic operations and improves
-          patient experience.
-        </p>
-
-        <div className="mt-5 flex items-center justify-between text-sm font-medium text-white/90">
-          <span>01:30</span>
-          <span className="inline-flex items-center gap-2">
-            Preview demo
-            <Expand size={15} />
-          </span>
+        <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-semibold backdrop-blur-sm">
+          <Expand size={14} />
+          Live preview
         </div>
       </div>
     </motion.div>
